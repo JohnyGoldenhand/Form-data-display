@@ -1,25 +1,33 @@
 import React, {useState} from 'react';
-import './App.css';
+import { BodyWraper , StyledButton, StyledForm, StyledInput, StyledButtonForm, StyledTableWraper} from './styles';
 
 function App() {
+
+  // const [content,setContent] = useState<boolean>(false);
 
   const [name, setName] = useState<string>('')
   const [description, setDescription] = useState<string>('')
   const [category, setCategory] = useState<string>('')
   const [watering, setWatering] = useState<string>('')
-  const [prefferences, setPreferences] = useState<string>('')
+  const [preferences, setPreferences] = useState<string>('')
 
   interface PlantProps {
     name: string;
     description: string;
     category: string;
     watering: string;
-    prefferences: string;
+    preferences: string;
   }
 
 
 
   const [plantList, setPlantList] = useState <Array<PlantProps>>([])
+
+
+  // const toogleContent = () => {
+  //   setContent(prev => !prev)
+  //   console.log('content');
+  // }
 
   const handleChangeName = (e: React.ChangeEvent<any>) => {
     e.preventDefault();
@@ -42,7 +50,7 @@ function App() {
     setWatering(value)
   }
 
-  const handleChangePrefferences = (e: React.ChangeEvent<any>) => {
+  const handleChangePreferences = (e: React.ChangeEvent<any>) => {
     e.preventDefault();
     const value = (e.target as HTMLInputElement).value;
     setPreferences(value)
@@ -50,24 +58,29 @@ function App() {
 
 
   const handleSubmit = (e: React.FormEvent) => {
-    setPlantList([...plantList, {name:name, description:description, category:category, watering:watering, prefferences:prefferences}]);
+    setPlantList([...plantList, {name, description, category, watering, preferences}]);
     e.preventDefault();
-    console.log(plantList);
+    setName('');
+    setDescription('');
+    setCategory('');
+    setWatering('');
+    setPreferences('');
   }
 
   return (
-    <div>
-        <form onSubmit={handleSubmit}>
-        <div>
-          <input type="text" onChange={handleChangeName} placeholder='name' value={name}/>
-          <input type="text" onChange={handleChangeDescription} placeholder='description' value={description}/>
-          <input type="text" onChange={handleChangeCategory} placeholder='category' value={category}/>
-          <input type="text" onChange={handleChangeWatering} placeholder='watering'value={watering}/>
-          <input type="text" onChange={handleChangePrefferences} placeholder='prefferences' value={prefferences}/>
-          <button  type="submit">Click</button>
-        </div>
+    <BodyWraper >  
+        <form onSubmit={handleSubmit} >
+        <StyledForm>
+          <StyledInput type="text" onChange={handleChangeName} placeholder='name' value={name}/>
+          <StyledInput type="text" onChange={handleChangeDescription} placeholder='description' value={description}/>
+          <StyledInput type="text" onChange={handleChangeCategory} placeholder='category' value={category}/>
+          <StyledInput type="text" onChange={handleChangeWatering} placeholder='watering'value={watering}/>
+          <StyledInput type="text" onChange={handleChangePreferences} placeholder='preferences' value={preferences}/>
+        </StyledForm>
+          <StyledButtonForm  type="submit">ADD</StyledButtonForm>
       </form>
-      <div>
+      <StyledButton >ADD PLANT</StyledButton>
+      <StyledTableWraper>
             {
               plantList.map((plant, index) =>
                 <table key={index}>
@@ -88,15 +101,15 @@ function App() {
                         <td>{plant.description}</td>
                         <td>{plant.category}</td>
                         <td>{plant.watering}</td>
-                        <td>{plant.prefferences}</td>
+                        <td>{plant.preferences}</td>
                       </tr> 
                     </tbody>
 
                 </table>
-)
+                )
             }
-      </div>
-    </div>
+      </StyledTableWraper>
+    </BodyWraper>
 
   );
 }
