@@ -38,9 +38,17 @@ height: auto;
 width: 500px;
 display: flex;
 flex-direction: column;
-align-items: center;
 border: 3px solid white;
 border-radius: 2.5rem;
 justify-content: center;
 color: white;
+`
+
+export const StyledListItem = styled.div `
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-left: 20px;
+    border-bottom: 1px white solid;
+    max-width: 90%;
 `

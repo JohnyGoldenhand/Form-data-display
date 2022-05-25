@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import { BodyWraper , StyledButton, StyledForm, StyledInput, StyledButtonForm, StyledTableWraper} from './styles';
+import React, {useState, useEffect} from 'react';
+import { BodyWraper , StyledButton, StyledForm, StyledInput, StyledButtonForm, StyledTableWraper, StyledListItem} from './styles';
 
 function App() {
 
@@ -12,6 +12,7 @@ function App() {
   const [preferences, setPreferences] = useState<string>('')
 
   interface PlantProps {
+    index?: number;
     name: string;
     description: string;
     category: string;
@@ -22,12 +23,37 @@ function App() {
 
 
   const [plantList, setPlantList] = useState <Array<PlantProps>>([])
-
+  
 
   // const toogleContent = () => {
   //   setContent(prev => !prev)
   //   console.log('content');
   // }
+
+
+
+  useEffect(()=> {
+   const data = JSON.parse(localStorage.getItem('plantList') || '')
+   if(data){
+     setPlantList(data);
+   }
+  },[])
+
+  useEffect(() => {
+    if(plantList.length > 0 ){
+      localStorage.setItem('plantList', JSON.stringify(plantList));
+      console.log('added data')
+    }
+  },[plantList])
+
+
+  const removeItems = (index: number) => {
+      const newArray = [...plantList];
+      newArray.splice(index, 1);
+      setPlantList(newArray);
+  }
+
+
 
   const handleChangeName = (e: React.ChangeEvent<any>) => {
     e.preventDefault();
@@ -83,29 +109,30 @@ function App() {
       <StyledTableWraper>
             {
               plantList.map((plant, index) =>
-                <table key={index}>
-                    <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Description</th>
-                        <th>Category</th>
-                        <th>Watering</th>
-                        <th>Prefferences</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>{index}</td>
-                        <td>{plant.name}</td>
-                        <td>{plant.description}</td>
-                        <td>{plant.category}</td>
-                        <td>{plant.watering}</td>
-                        <td>{plant.preferences}</td>
-                      </tr> 
-                    </tbody>
-
-                </table>
+                <StyledListItem key={index}>
+                    <div>
+                      <div>
+                          <p>ID</p>
+                          <p>Name</p>
+                          <p>Description</p>
+                          <p>Category</p>
+                          <p>Watering</p>
+                          <p>Prefferences</p>
+                        </div>
+                    </div>
+                    <div>
+                      <div>
+                        <p>{index}</p>
+                        <p>{plant.name}</p>
+                        <p>{plant.description}</p>
+                        <p>{plant.category}</p>
+                        <p>{plant.watering}</p>
+                        <p>{plant.preferences}</p>
+                      </div> 
+                    </div>
+                    <StyledButtonForm onClick={() => removeItems(index)}>x</StyledButtonForm>
+                </StyledListItem>
+                
                 )
             }
       </StyledTableWraper>
