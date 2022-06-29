@@ -1,9 +1,8 @@
 import React, {useState, useEffect} from 'react';
-import { BodyWraper , StyledButton, StyledForm, StyledInput, StyledButtonForm, StyledTableWraper, StyledListItem} from './styles';
+import { BodyWraper , StyledForm, StyledInput, StyledButtonForm, StyledTableWraper, StyledListItem} from './styles';
 
 function App() {
 
-  // const [content,setContent] = useState<boolean>(false);
 
   const [name, setName] = useState<string>('')
   const [description, setDescription] = useState<string>('')
@@ -25,11 +24,6 @@ function App() {
   const [plantList, setPlantList] = useState <Array<PlantProps>>([])
   
 
-  // const toogleContent = () => {
-  //   setContent(prev => !prev)
-  //   console.log('content');
-  // }
-
 
 
   useEffect(()=> {
@@ -42,16 +36,11 @@ function App() {
   useEffect(() => {
     if(plantList.length > 0 ){
       localStorage.setItem('plantList', JSON.stringify(plantList));
-      console.log('added data')
     }
   },[plantList])
 
 
-  const removeItems = (index: number) => {
-      const newArray = [...plantList];
-      newArray.splice(index, 1);
-      setPlantList(newArray);
-  }
+
 
 
 
@@ -93,21 +82,55 @@ function App() {
     setPreferences('');
   }
 
+  const removeItems = (index: number) => {
+    const newArray = [...plantList];
+    newArray.splice(index, 1);
+    setPlantList(newArray);
+}
+
+  const handleEdit = (plant: PlantProps) => {
+    setName(plant.name);
+    setDescription(plant.description);
+    setCategory(plant.category);
+    setWatering(plant.watering);
+    setPreferences(plant.preferences);
+  }
+
+  // const handleEditSubmit = (plant: PlantProps, index: number) => {
+  //   const oldPlant = plantList[index];
+  //   const name = plant.name;
+  //   const description = plant.description;
+  //   const category = plant.category;
+  //   const watering = plant.watering;
+  //   const preferences = plant.preferences;
+  //   const newPlant = {
+  //     oldPlant.name = name,
+  //     oldPlant.description = description,
+  //     oldPlant.category = category,
+  //   }
+  //   setPlantList([...plantList, {name, description, category,watering, preferences}])
+  // }
+
   return (
     <BodyWraper >  
-        <form onSubmit={handleSubmit} >
-        <StyledForm>
-          <StyledInput type="text" onChange={handleChangeName} placeholder='name' value={name}/>
-          <StyledInput type="text" onChange={handleChangeDescription} placeholder='description' value={description}/>
-          <StyledInput type="text" onChange={handleChangeCategory} placeholder='category' value={category}/>
-          <StyledInput type="text" onChange={handleChangeWatering} placeholder='watering'value={watering}/>
-          <StyledInput type="text" onChange={handleChangePreferences} placeholder='preferences' value={preferences}/>
-        </StyledForm>
-          <StyledButtonForm  type="submit">ADD</StyledButtonForm>
-      </form>
-      <StyledButton >ADD PLANT</StyledButton>
+      {
+            <form  onSubmit={handleSubmit}>
+              <StyledForm >
+                <StyledInput type="text" onChange={handleChangeName} placeholder='name' value={name}/>
+                <StyledInput type="text" onChange={handleChangeDescription} placeholder='description' value={description} />
+                <StyledInput type="text" onChange={handleChangeCategory} placeholder='category' value={category}/>
+                <StyledInput type="text" onChange={handleChangeWatering} placeholder='watering'value={watering}/>
+                <StyledInput type="text" onChange={handleChangePreferences} placeholder='preferences' value={preferences}/>
+              </StyledForm>
+              <StyledButtonForm  type="submit">ADD</StyledButtonForm>
+              <StyledButtonForm  >EDIT</StyledButtonForm>
+          </form>
+      }
+        
+        
       <StyledTableWraper>
             {
+              
               plantList.map((plant, index) =>
                 <StyledListItem key={index}>
                     <div>
@@ -120,17 +143,19 @@ function App() {
                           <p>Prefferences</p>
                         </div>
                     </div>
-                    <div>
-                      <div>
+                    <div>     
                         <p>{index}</p>
                         <p>{plant.name}</p>
                         <p>{plant.description}</p>
                         <p>{plant.category}</p>
                         <p>{plant.watering}</p>
                         <p>{plant.preferences}</p>
-                      </div> 
                     </div>
-                    <StyledButtonForm onClick={() => removeItems(index)}>x</StyledButtonForm>
+                    <div>
+                      <StyledButtonForm onClick={() => removeItems(index)}>x</StyledButtonForm>
+                      <StyledButtonForm onClick={() => handleEdit(plant)}>edit</StyledButtonForm>
+                      {/* <StyledButtonForm onClick={() => handleEditSubmit(plant,index)}>SUBMIT EDIT</StyledButtonForm> */}
+                    </div>
                 </StyledListItem>
                 
                 )
